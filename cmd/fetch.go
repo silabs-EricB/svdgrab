@@ -150,7 +150,7 @@ to quickly create a Cobra application.`,
 			os.Exit(-1)
 		}
 
-		if xmlBytes, err := getXML("https://sadevicepacksprodus.blob.core.windows.net/idxfile/index.pidx"); err != nil {
+		if xmlBytes, err := getXML("https://www.keil.com/pack/index.pidx"); err != nil {
 			log.Printf("Failed to get XML: %v", err)
 		} else {
 			result := packIndex.Index{}
@@ -210,7 +210,7 @@ to quickly create a Cobra application.`,
 			}
 		}
 
-		fmt.Printf("✨ %d packs from vendor %s stored in folder [%s].\n", count, color.CyanString(vendor), color.CyanString(filepath.Join(pathToSave, "SVD")))
+		fmt.Printf("✨ Done, %d packs from vendor %s stored in folder [%s].\n", count, color.CyanString(vendor), color.CyanString(filepath.Join(pathToSave, "SVD")))
 	},
 }
 

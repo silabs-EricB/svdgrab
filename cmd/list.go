@@ -60,7 +60,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		vendors := []string{}
-		if xmlBytes, err := getXML("https://sadevicepacksprodus.blob.core.windows.net/idxfile/index.pidx"); err != nil {
+		if xmlBytes, err := getXML("https://www.keil.com/pack/index.pidx"); err != nil {
 			log.Printf("Failed to get XML: %v", err)
 		} else {
 			result := packIndex.Index{}
