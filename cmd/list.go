@@ -51,13 +51,8 @@ sampleLoop:
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Retrieve a listing of vendors",
+	Long: `Use this option to find the name of vendor to use with the fetch command`,
 	Run: func(cmd *cobra.Command, args []string) {
 		vendors := []string{}
 		if xmlBytes, err := getXML("https://www.keil.com/pack/index.pidx"); err != nil {
