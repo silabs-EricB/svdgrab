@@ -24,18 +24,19 @@ package cmd
 import (
 	"fmt"
 	"os"
+
+	"github.com/silabs-EricB/svdgrab/buildInfo"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
-var version = "0.0.3"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "svdgrab",
-	Version: version,
-	Short: "Retrieve a group of SVD from Keil Index",
+	Use:     "svdgrab",
+	Version: buildInfo.Version,
+	Short:   "Retrieve a group of SVD from Keil Index",
 	Long: `This application can list the suppliers and retrieve
 SVD from the Keil Indexer.`,
 	// Uncomment the following line if your bare application
