@@ -29,10 +29,12 @@ import (
 )
 
 var cfgFile string
+var version = "0.0.3"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "svdgrab",
+	Version: version,
 	Short: "Retrieve a group of SVD from Keil Index",
 	Long: `This application can list the suppliers and retrieve
 SVD from the Keil Indexer.`,
