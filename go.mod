@@ -1,12 +1,17 @@
-module github.com/bissonex/svdgrab
+module github.com/silabs-EricB/svdgrab
 
 go 1.17
 
 require (
-	github.com/cavaliercoder/grab v2.0.0+incompatible // indirect
+	github.com/cavaliercoder/grab v2.0.0+incompatible
+	github.com/fatih/color v1.13.0
+	github.com/spf13/cobra v1.3.0
+	github.com/spf13/viper v1.10.0
+)
+
+require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
@@ -20,10 +25,8 @@ require (
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
-	github.com/spf13/cobra v1.3.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.10.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/xuri/xgen v0.0.0-20211130070908-09270ec85719 // indirect
