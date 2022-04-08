@@ -28,7 +28,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/bissonex/svdgrab/packIndex"
+	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )

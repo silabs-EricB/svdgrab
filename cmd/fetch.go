@@ -34,7 +34,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bissonex/svdgrab/packIndex"
+	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/cavaliercoder/grab"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"

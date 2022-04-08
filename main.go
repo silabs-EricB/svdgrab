@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/bissonex/svdgrab/cmd"
+import "github.com/silabs-EricB/svdgrab/cmd"
 
 func main() {
 	cmd.Execute()
