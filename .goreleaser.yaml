@@ -9,9 +9,10 @@ before:
 builds:
   # Custom ldflags templates.
   # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
-  - ldflags:
-    - -s -w -X github.com/silabs-EricB/svdgrab/buildInfo.Version={{.Version}}
-  - env:
+  -
+    ldflags:
+      - -s -w -X github.com/silabs-EricB/svdgrab/buildInfo.Version={{.Version}}
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
