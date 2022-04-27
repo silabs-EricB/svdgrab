@@ -70,7 +70,6 @@ func init() {
 	fetchCmd.PersistentFlags().String("pack", "", "Pack version to download")
 
 	listCmd.PersistentFlags().String("index", "https://www.keil.com/pack/index.pidx", "The url where to download the Index file.")
-	listCmd.PersistentFlags().String("index", "https://www.keil.com/pack/index.pidx", "The url where to download the Index file.")
 }
 
 // initConfig reads in config file and ENV variables if set.
