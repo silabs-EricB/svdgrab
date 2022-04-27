@@ -54,7 +54,8 @@ var listCmd = &cobra.Command{
 	Short: "Retrieve a listing of vendors",
 	Long:  `Use this option to find the name of vendor to use with the fetch command`,
 	Run: func(cmd *cobra.Command, args []string) {
-		vendors := []string{}
+		vendors := map[string][]string{}
+		//releases := map[string][]string{}
 		urlToIndex, _ := cmd.Flags().GetString("index")
 		if xmlBytes, err := getXML(urlToIndex); err != nil {
 			log.Printf("Failed to get XML: %v", err)
@@ -62,21 +63,30 @@ var listCmd = &cobra.Command{
 			result := packIndex.Index{}
 			xml.Unmarshal(xmlBytes, &result)
 
-			fmt.Println("Vendor ", result.Vendor)
+			fmt.Println("Package Index File Provider: ", result.Vendor)
+
+			fmt.Println("Vendors available: ")
 			for _, s := range result.Pindex {
 				for _, t := range s.Pdsc {
 					//fmt.Printf(color.GreenString("🏬 Vendor %s\n"), t.VendorAttr)
-					vendors = append(vendors, strings.ToLower(t.VendorAttr))
+					//vendors = append(vendors, strings.ToLower(t.VendorAttr))
+					vendors[strings.ToLower(t.VendorAttr)] = append(vendors[strings.ToLower(t.VendorAttr)], t.VersionAttr)
 				}
+				// fmt.Printf(color.GreenString("🏬 %s\n"), releases)
 			}
 		}
 
-		sort.Strings(vendors)
-		vendors = unique(vendors)
-		for _, vendor := range vendors {
-			fmt.Printf(color.GreenString("🏬 %s\n"), vendor)
+		keys := make([]string, 0, len(vendors))
+		for k := range vendors {
+			keys = append(keys, k)
 		}
-		fmt.Println("list called")
+		sort.Strings(keys)
+		keys = unique(keys)
+		for _, key := range keys {
+			var releases = unique(vendors[key])
+			sort.Strings(releases)
+			fmt.Printf(color.GreenString("🏬 %-20v")+color.WhiteString("%s\n"), key, releases)
+		}
 	},
 }
 
