@@ -28,8 +28,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/fatih/color"
+	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/spf13/cobra"
 )
 
@@ -52,10 +52,11 @@ sampleLoop:
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Retrieve a listing of vendors",
-	Long: `Use this option to find the name of vendor to use with the fetch command`,
+	Long:  `Use this option to find the name of vendor to use with the fetch command`,
 	Run: func(cmd *cobra.Command, args []string) {
 		vendors := []string{}
-		if xmlBytes, err := getXML("https://www.keil.com/pack/index.pidx"); err != nil {
+		urlToIndex, _ := cmd.Flags().GetString("index")
+		if xmlBytes, err := getXML(urlToIndex); err != nil {
 			log.Printf("Failed to get XML: %v", err)
 		} else {
 			result := packIndex.Index{}

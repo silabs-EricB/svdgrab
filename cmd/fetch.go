@@ -34,9 +34,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/cavaliercoder/grab"
 	"github.com/fatih/color"
+	"github.com/silabs-EricB/svdgrab/packIndex"
 	"github.com/spf13/cobra"
 )
 
@@ -132,11 +132,13 @@ func extractPack(archiveFilePath string, pathToSave string) {
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "Get all the latest SVD available from vendors",
-	Long: `Retrieve the pack and extract the SVD.`,
+	Long:  `Retrieve the pack and extract the SVD.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		vendor, _ := cmd.Flags().GetString("vendor")
 		pathToSave, _ := cmd.Flags().GetString("path")
+		urlToIndex, _ := cmd.Flags().GetString("index")
+		packVersion, _ := cmd.Flags().GetString("pack")
 		count := 0
 
 		err := os.MkdirAll(pathToSave, os.ModePerm)
@@ -145,7 +147,7 @@ var fetchCmd = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		if xmlBytes, err := getXML("https://www.keil.com/pack/index.pidx"); err != nil {
+		if xmlBytes, err := getXML(urlToIndex); err != nil {
 			log.Printf("Failed to get XML: %v", err)
 		} else {
 			result := packIndex.Index{}
@@ -155,50 +157,52 @@ var fetchCmd = &cobra.Command{
 			for _, s := range result.Pindex {
 				for _, t := range s.Pdsc {
 					//fmt.Println(i, j, t.VendorAttr)
-					if strings.EqualFold(strings.ToLower(t.VendorAttr), strings.ToLower(vendor)) && (t.DeprecatedAttr == "") {
-						// https://www.silabs.com/documents/public/cmsis-packs/GeckoPlatform_EFR32MG24_DFP.3.2.0.pack
-						filename := t.UrlAttr + t.VendorAttr + "." + t.NameAttr + "." + t.VersionAttr + ".pack"
-						client := grab.NewClient()
-						req, _ := grab.NewRequest(pathToSave, filename)
+					if packVersion == "" || strings.EqualFold(strings.ToLower(t.VersionAttr), strings.ToLower(packVersion)) {
+						if strings.EqualFold(strings.ToLower(t.VendorAttr), strings.ToLower(vendor)) && (t.DeprecatedAttr == "") {
+							// https://www.silabs.com/documents/public/cmsis-packs/GeckoPlatform_EFR32MG24_DFP.3.2.0.pack
+							filename := t.UrlAttr + t.VendorAttr + "." + t.NameAttr + "." + t.VersionAttr + ".pack"
+							client := grab.NewClient()
+							req, _ := grab.NewRequest(pathToSave, filename)
 
-						// start download
-						fmt.Printf(color.GreenString("🚚 Downloading %v...\n"), req.URL())
-						resp := client.Do(req)
-						if err := resp.Err(); err != nil {
-							fmt.Printf(color.RedString("\t📜 HTTP status codes: %v\n"), resp.HTTPResponse.Status)
-						} else {
-							fmt.Printf(color.BlueString("\t📜 HTTP status codes: %v\n"), resp.HTTPResponse.Status)
-						}
-
-						// start UI loop
-						t := time.NewTicker(500 * time.Millisecond)
-						defer t.Stop()
-
-					Loop:
-						for {
-							select {
-							case <-t.C:
-								fmt.Printf("  transferred %v / %v bytes (%.2f%%)\n",
-									resp.BytesComplete(),
-									resp.Size,
-									100*resp.Progress())
-
-							case <-resp.Done:
-								// download is complete
-								break Loop
+							// start download
+							fmt.Printf(color.GreenString("🚚 Downloading %v...\n"), req.URL())
+							resp := client.Do(req)
+							if err := resp.Err(); err != nil {
+								fmt.Printf(color.RedString("\t📜 HTTP status codes: %v\n"), resp.HTTPResponse.Status)
+							} else {
+								fmt.Printf(color.BlueString("\t📜 HTTP status codes: %v\n"), resp.HTTPResponse.Status)
 							}
-						}
 
-						// check for errors
-						if err := resp.Err(); err != nil {
-							//fmt.Fprintf(os.Stderr, color.RedString("Download failed: %v\n"), err)
-							//os.Exit(1)
-							continue
-						} else {
-							fmt.Printf(color.GreenString("\t📦 saved to ./%v \n"), resp.Filename)
-							extractPack(resp.Filename, pathToSave)
-							fmt.Printf("\n")
-							count++
+							// start UI loop
+							t := time.NewTicker(500 * time.Millisecond)
+							defer t.Stop()
+
+						Loop:
+							for {
+								select {
+								case <-t.C:
+									fmt.Printf("  transferred %v / %v bytes (%.2f%%)\n",
+										resp.BytesComplete(),
+										resp.Size,
+										100*resp.Progress())
+
+								case <-resp.Done:
+									// download is complete
+									break Loop
+								}
+							}
+
+							// check for errors
+							if err := resp.Err(); err != nil {
+								//fmt.Fprintf(os.Stderr, color.RedString("Download failed: %v\n"), err)
+								//os.Exit(1)
+								continue
+							} else {
+								fmt.Printf(color.GreenString("\t📦 saved to ./%v \n"), resp.Filename)
+								extractPack(resp.Filename, pathToSave)
+								fmt.Printf("\n")
+								count++
+							}
 						}
 					}
 				}
